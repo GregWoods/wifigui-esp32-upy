@@ -174,13 +174,18 @@ def show():
             text_color = 0
             bg_color = 1
         oled.fill_rect(0, _row_position(idx) - row_offset, width, row_height, bg_color)
+        truncated_text = uirow.text[0:15]
+        print(uirow.text)
+        print(truncated_text)
         oled.text(uirow.text, 0, _row_position(idx), text_color)
     oled.show()
 
 def clear():
     #clear array of screen items
+    global selected_idx
     content.clear()
     oled.fill(0)
+    selected_idx = 0
 
 
 # used in the main loop
