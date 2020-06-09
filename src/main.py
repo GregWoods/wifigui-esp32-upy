@@ -15,13 +15,15 @@ def turn_wifi_on():
 def nothing():
     print("Back")
 
+def main_menu():
+    ui.clear()
+    ui.row("WiFi <off>", turn_wifi_on)
+    ui.row("<back>", nothing)
+    ui.show()
+
+
 print("start...")
-ui.clear()
-ui.row("WiFi <off>", turn_wifi_on)
-ui.row("<back>", nothing)
-ui.show()
-
-
+main_menu()
 while (True):
     #interupts constantly set the state of the last press
     ui.process_button()
@@ -31,7 +33,7 @@ while (True):
         print("Click")
     if ui.is_pressed():
         print("Press")
+        ui.call_current_row_method()
     if ui.is_long_pressed():
         print("Very long press")
-        #ui.long_press_current_row()
     utime.sleep_ms(1)

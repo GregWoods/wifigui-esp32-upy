@@ -8,24 +8,15 @@ height = 64
 i2c = 0x3c
 oled = 0
 
-last_button_press = 0   #0 = none, 1 = click, 2 = long press
-
 _btn_on_ticks = 0
 button_irq_count = 0
 button_history = 0
 button_last_tick = 0
 
-
-#NO_UNHANDLED_BUTTON_PRESS = 0
-#SHORT_PRESS = 1
-#LONG_PRESS = 2
-
-
 btn = Pin(25, Pin.IN, Pin.PULL_DOWN)    #Temp value because we can't declare a type. The real setup is in init
 
 # Don't write code for multiple buttons until I have multiple buttons!
 # Don't write code for double-click until I need a double-click!
-
 
 start_pressed_millis = 0
  
@@ -34,8 +25,11 @@ _is_press = False
 _is_long_press = False
 _keyup_reset = True
 
+#--------------------------------------------------------------------------
 #These are the ones we care about in the UI
 #  after reading the value, we reset to false. We assume that if its been read, it's been handled
+
+# They are used in conjunction with process_button()
 
 def is_clicked():
     global _is_click
@@ -60,7 +54,7 @@ def is_long_pressed():
         return True
     else:
         return False
-
+#--------------------------------------------------------------------------
 
 def _key_down_event():
     # detects the start of a button press
@@ -90,7 +84,7 @@ def _key_is_up():
     global button_history
     return button_history == 0b00000000
 
-
+#--------------------------------------------------------------------------
 def process_button():
     #this is run in the main loop
     #  keeps most of the work out of the interrupt handler
@@ -124,45 +118,6 @@ def process_button():
             _keyup_reset = False
 
 
-
-
-
-
-
-
-
-"""
-## ignore this below here... old code based on interrupts. Cannot handle long press, double click etc
-
-def btn_change(btn):
-    if btn.value() == 1:
-        btn_on(btn)
-    else:
-        btn_off(btn)
-
-def btn_on(btn):
-    global _btn_on_ticks
-    _btn_on_ticks = utime.ticks_ms()
-    #set a one-shot timer interrupt to detect the long press
-    timer.init(period=4, mode=Timer.ONE_SHOT, callback=button_interrupt)
-
-def btn_off(btn):
-    global _btn_on_ticks
-    global last_button_press
-    global NO_UNHANDLED_BUTTON_PRESS, SHORT_PRESS, LONG_PRESS
-    press_duration = utime.ticks_diff(utime.ticks_ms(), _btn_on_ticks) 
-    if press_duration <= 30:
-        last_button_press = NO_UNHANDLED_BUTTON_PRESS
-        return
-    if press_duration > 30 and press_duration < 200:
-        last_button_press = SHORT_PRESS
-        # navigate_menu()   #shouldn't really be doing this in the interupt handler. Keep it short!
-        return
-    if press_duration > 700:
-        last_button_press = LONG_PRESS
- 
-
-"""
 def init(screen_width, screen_height, i2c_address, scl_pin, sda_pin, button_gpio):
     global width, height, oled, btn
     width = screen_width
@@ -172,14 +127,9 @@ def init(screen_width, screen_height, i2c_address, scl_pin, sda_pin, button_gpio
     oled = ssd1306.SSD1306_I2C(screen_width, screen_height, i2c, i2c_address)
     
     btn = Pin(button_gpio, Pin.IN, Pin.PULL_DOWN)
-    #btn.irq(btn_change, Pin.IRQ_RISING | Pin.IRQ_FALLING)
-
 
 
 def update_button_state(timer):
-    ##button_irq_count helps us keep track of whether the interrupt has been handled
-    #global button_irq_count
-    #button_irq_count += 1 
     global btn
     
     #check button state, and store it in button_history, restrict it to the 
@@ -187,17 +137,13 @@ def update_button_state(timer):
     global button_history
     button_history = ((button_history << 1) | btn.value()) & 0xFF
 
-
-# just store 8 bits of history for start/end of a button push
-# store max 32ms of history
-# sample every 4ms
+# sample every 4ms (with 8bits of history = 32ms to detect valid press and release event)
 timer = Timer(0)
 timer.init(period = 4, mode = Timer.PERIODIC, callback = update_button_state)
 
 
 
 # oled coords: col, row
-
 row_height = 10
 row_offset = 2
 
@@ -245,3 +191,10 @@ def navigate_menu():
     if selected_idx >= len(content):
         selected_idx = 0
     show()
+
+
+def call_current_row_method():
+    global selected_idx
+    content[selected_idx].on_press()
+
+
