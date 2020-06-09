@@ -164,7 +164,7 @@ selected_idx = 0
 def row(text, callback):
     content.append(UiRow(text, callback))
 
-def show():
+def show(animate = True):
     #render and show the screen
     global row_offset
     for idx, uirow in enumerate(content):
@@ -178,7 +178,14 @@ def show():
         print(uirow.text)
         print(truncated_text)
         oled.text(uirow.text, 0, _row_position(idx), text_color)
-    oled.show()
+        # slow down the drawing a little to give a little animation to make it clearer when the screen changes
+        #  and move oled.show() into the loop (inefficient, but allows this animation)
+        if (animate):
+            utime.sleep_ms(50)
+            oled.show()
+    #For navigation screen refreshes, do it as fast as possible
+    if (animate == False):
+        oled.show()
 
 def clear():
     #clear array of screen items
@@ -195,7 +202,7 @@ def navigate_menu():
     selected_idx += 1
     if selected_idx >= len(content):
         selected_idx = 0
-    show()
+    show(animate = False)
 
 
 def call_current_row_method():
