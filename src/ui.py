@@ -175,7 +175,6 @@ def show(animate = True):
             bg_color = 1
         oled.fill_rect(0, _row_position(idx) - row_offset, width, row_height, bg_color)
         truncated_text = uirow.text[0:15]
-        print(uirow.text)
         print(truncated_text)
         oled.text(uirow.text, 0, _row_position(idx), text_color)
         # slow down the drawing a little to give a little animation to make it clearer when the screen changes

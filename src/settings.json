@@ -1,0 +1,12 @@
+{
+    "wifi" : {
+        "enabled" : true,
+        "currentAP" : {
+            "ssid" : "ndhome",
+            "password" : "thisLittlePiggy"
+        },
+        "rememberedAPs" : [
+        ]
+    }
+
+}
