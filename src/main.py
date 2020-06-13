@@ -60,7 +60,7 @@ def connect_wifi():
             connected = True
             print('network config:', wlan.ifconfig()) 
 
-            main_menu()   
+            main_menu(animate = False)   
         else:
             # This way is cancellable with button press, as it works along with the main loop
             #print("Wifi is NOT connected!")
@@ -92,16 +92,17 @@ def connect_wifi():
 
 
 def toggle_wifi():
-    global current_screen, config
-    current_screen = "toggle_wifi"       
+    global current_screen, config, connected
+    current_screen = "main_menu"       
     print(current_screen)
     if config.get_wifi_enabled():
         config.set_wifi_enabled(False)
+        connected = False
         main_menu(animate = False)
     else:
         config.set_wifi_enabled(True)
         connect_wifi()
-        
+    
 
 def change_access_point():
     global current_screen
@@ -109,16 +110,18 @@ def change_access_point():
     print("Change Access Point")    
     
 
-def main_menu(animate = True):
+def main_menu(animate = True, preserve_selected_idx = False):
     global current_screen, config
-    current_screen = "main_menu"
+    preserve_selected_idx = (current_screen == "main_menu")
 
+    current_screen = "main_menu"
     ui.screen.clear()
+    #ui.screen.add_row("test ", change_access_point)
     ui.screen.add_row("WiFi " + config.get_wifi_state_text(), toggle_wifi)
     ui.screen.add_row(config.current['wifi']['currentAP']['ssid'], change_access_point)
     if connected:
         ui.screen.add_row(wlan.ifconfig()[0], menu_type = UiRowType.bottom)
-    ui.screen.show(animate)
+    ui.screen.show(animate, preserve_selected_idx)
 
 def forget_current_AP():
     global current_screen
