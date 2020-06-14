@@ -81,7 +81,17 @@ def connect_wifi():
 
             connected = False
             
-  
+def press3():
+    print ("Press 3")
+def press4():
+    print ("Press 4")
+def press5():
+    print ("Press 5")
+def press6():
+    print ("Press 6")
+def press7():
+    print ("Press 7")                
+
 #------------------------------------------------    
 #UI Menus
 
@@ -119,8 +129,13 @@ def main_menu(animate = True, preserve_selected_idx = False):
     #ui.screen.add_row("test ", change_access_point)
     ui.screen.add_row("WiFi " + config.get_wifi_state_text(), toggle_wifi)
     ui.screen.add_row(config.current['wifi']['currentAP']['ssid'], change_access_point)
-    if connected:
-        ui.screen.add_row(wlan.ifconfig()[0], menu_type = UiRowType.bottom)
+    ui.screen.add_row("Row 3", press3)
+    ui.screen.add_row("Row 4", press4)
+    ui.screen.add_row("Row 5", press5)
+    ui.screen.add_row("Row 6", press6)
+    ui.screen.add_row("Row 7", press7)
+    #if connected:
+    #    ui.screen.add_row(wlan.ifconfig()[0], menu_type = UiRowType.bottom)
     ui.screen.show(animate, preserve_selected_idx)
 
 def forget_current_AP():
@@ -158,8 +173,10 @@ btn = Pin(GPIO25, Pin.IN, Pin.PULL_DOWN)    #Temp value because we can't declare
 # sample keypresses every 4ms (with 8bits of history = 32ms to detect and debounce a valid press and release event)
 timer = Timer(0)
 KEYPRESS_PERIOD = 4
+MAX_ROWS = 5
+ROW_HEIGHT = int(screen_height / MAX_ROWS)
 
-ui = UI(oled, btn, timer, KEYPRESS_PERIOD)
+ui = UI(oled, btn, timer, ROW_HEIGHT, KEYPRESS_PERIOD)
 
 main_menu(animate = False)
 connect_wifi()
