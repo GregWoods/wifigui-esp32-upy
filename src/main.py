@@ -145,15 +145,36 @@ def forget_current_AP():
     current_screen = "forget_current_AP"    
     print(current_screen)
 
-def select_ap(ap_idx):
-    print("selected AP:", ap_idx)
-    #save the AP
-    #connect to it
 
+def select_ap(ap_idx):
+    global config
+    global access_points
+    print("selected AP:", ap_idx)
+
+    #save the AP
+    selected_AP = access_points[ap_idx]
+    AP_name = selected_AP[0].decode()
+    config.set_current_AP(AP_name)
+    
+    if config.is_AP_saved(AP_name):
+        connect_wifi()
+    else:
+        input_wifi_password()
+
+
+def input_wifi_password():
+    global ui
+    print("input_wifi_password")
+    ui.screen.clear()
+    #ui.screen.keyboard()
+    ui.screen.show()
+
+access_points = []
 
 def choose_another_network():
     global current_screen, ui
     global wlan
+    global access_points
     current_screen = "choose_another_network"    
     print(current_screen)
     

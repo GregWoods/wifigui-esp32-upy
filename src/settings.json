@@ -2,7 +2,7 @@
     "wifi" : {
         "enabled" : true,
         "currentAP" : "ndhome",
-        "rememberedAPs" : [
+        "savedAPs" : [
             {
                 "ssid" : "ndhome",
                 "password" : "thislittlePiggy"
