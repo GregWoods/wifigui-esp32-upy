@@ -8,6 +8,7 @@ import ssd1306
 
 from ui import UI, UiRowType, Screen
 import configuration
+from keyboard import Keyboard
 
 
 GPIO25 = 25
@@ -122,6 +123,12 @@ def change_access_point():
     print("Change Access Point")    
     
 
+def show_keyboard():
+    global oled
+    kb = Keyboard(oled)
+    kb.show()
+
+
 def main_menu(animate = True, preserve_selected_idx = False):
     global current_screen, config
     preserve_selected_idx = (current_screen == "main_menu")
@@ -131,11 +138,8 @@ def main_menu(animate = True, preserve_selected_idx = False):
     #ui.screen.add_row("test ", change_access_point)
     ui.screen.add_row("WiFi " + config.get_wifi_state_text(), toggle_wifi)
     ui.screen.add_row(config.current['wifi']['currentAP'], change_access_point)
-    ui.screen.add_row("Row 3", press3)
-    ui.screen.add_row("Row 4", press4)
-    ui.screen.add_row("Row 5", press5)
-    ui.screen.add_row("Row 6", press6)
-    ui.screen.add_row("Row 7", press7)
+    ui.screen.add_row("Keyboard", show_keyboard)
+
     #if connected:
     #    ui.screen.add_row(wlan.ifconfig()[0], menu_type = UiRowType.bottom)
     ui.screen.show(animate, preserve_selected_idx)
@@ -223,7 +227,7 @@ ROW_HEIGHT = int(screen_height / MAX_ROWS)
 ui = UI(oled, btn, timer, ROW_HEIGHT, KEYPRESS_PERIOD)
 
 main_menu(animate = False)
-connect_wifi()
+#connect_wifi() #disable to speed up testing
 
 while (True):
     #interupts constantly set the state of the last press
