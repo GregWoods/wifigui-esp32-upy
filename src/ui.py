@@ -179,11 +179,13 @@ class Screen:
         self.buffer(animate, preserve_selected_idx)
         self.oled.show()
 
+
     #split off from show() so we can use buffer(), oled.scroll(), show()
     def buffer(self, animate = True, preserve_selected_idx = False):
+
         if not preserve_selected_idx:
             self.set_first_selectable_idx()
-
+        
         #make sure the number of rows fits on screen
         #  if we have some spare vertical pixels after max_row, 
         #    populate it with the next row. It gives a visual indication there are more options
@@ -212,17 +214,9 @@ class Screen:
 
             self.oled.fill_rect(0, rowposition - self._row_offset, self.oled.width, self._row_height, bg_color)
             truncated_text = uirow.text[0:15]
-            print(truncated_text)
+            #print(truncated_text)
             self.oled.text(uirow.text, 0, rowposition, text_color)
- #           # slow down the drawing a little to give a little animation to make it clearer when the screen changes
- #           #  and move oled.show() into the loop (inefficient, as the screen is redrawn multiple times, but it allows this animation)
- #           if (animate):
- #               utime.sleep_ms(50)
- #               self.oled.show()
-        #For some screen refreshes, such as toggling items, we need to refresh as fast as possible
- #       if (animate == False):
- #           self.oled.show()
-#
+
 
     def clear(self):
         #clear array of screen items
@@ -234,25 +228,8 @@ class Screen:
     def navigate_menu(self):
         self.set_next_selectable_idx()
         self.set_screen_top_idx()
-        #self.buffer(animate = False, preserve_selected_idx=True)
-        #self.scroll_into_view()
-        #self.oled.show()
         self.show(animate = False, preserve_selected_idx=True)
-
-    #def scroll_into_view(self):
-    #    if self.menu_selected_idx >= (self.screen_top_idx + self.max_rows):
-    #        #scrolled off the bottom of the screen, scroll more menu into view
-    #        print("OFF bottom of visible menu")
-    #        self.scroll_offset += self._row_height
-    #        self.oled.scroll(0, 0 - (2 * self._row_height))
-    #    elif self.menu_selected_idx < self.screen_top_idx:
-    #        # scrolled off the bottom of the menu, move menu back to the top
-    #        self.oled.scroll(0, self.scroll_offset)
-    #        self.scroll_offset = 0
-    #        #self.screen_top_idx = 0
-    #        #additional loop needed here if, due to non-selectable menu items, the next selectable menui item is off the bottom of the screen
-    #        #  this is not a desirable menu layout, as it means some info items will not be visible
-                    
+              
 
     def set_screen_top_idx(self):
         if self.menu_selected_idx >= (self.screen_top_idx + self.max_rows):
@@ -276,13 +253,13 @@ class Screen:
 
 
     def _get_selectable_idx(self, idx):
-        cnt = len(self.content)
-        while(cnt > 0 ):   
+        for _ in self.content:  
             # if there is an on_press defined for this row, it is selectable, so exit
             if self.content[idx].on_press:
-                break   
+                return idx   
             idx = self._inc_idx(idx)
-        return idx        
+        #if we get to the end of the for loop, nothing was selectable
+        return -1        
 
     def _inc_idx(self, idx):
         idx += 1

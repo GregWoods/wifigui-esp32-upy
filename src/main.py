@@ -41,6 +41,7 @@ def connecting_screen():
     ui.screen.add_row("Cancel", cancel_connecting)
     ui.screen.show()
 
+
 def connect_wifi():
     global wlan, connecting, connected, config
     global current_screen
@@ -80,7 +81,7 @@ def connect_wifi():
             #    utime.sleep_ms(200)
 
             connected = False
-            
+#Testing!          
 def press3():
     print ("Press 3")
 def press4():
@@ -143,10 +144,27 @@ def forget_current_AP():
     current_screen = "forget_current_AP"    
     print(current_screen)
 
+def select_ap(ap_idx):
+    print("selected AP:", ap_idx)
+
 def choose_another_network():
-    global current_screen
+    global current_screen, ui
+    global wlan
     current_screen = "choose_another_network"    
     print(current_screen)
+    
+    #temporary "scanning" screen, so the user knows their button Press worked
+    ui.screen.clear()
+    ui.screen.add_row("Scanning...")
+    ui.screen.show()
+
+    access_points = wlan.scan() #blocks for a couple of seconds
+    print(access_points)
+    ui.screen.clear()
+    for idx, ap in enumerate(access_points):
+        ui.screen.add_row(ap[0], lambda tmp=idx:select_ap(tmp))
+    ui.screen.show()
+
 
 def change_access_point():
     global current_screen, config, ui
