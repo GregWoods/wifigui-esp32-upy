@@ -13,9 +13,7 @@ class ConfigManager:
         f = uio.open('settings.json', 'r')
         self.current = json.loads(f.read())
         f.close()
-        print(self.current)
-        print(self.current['wifi'])
-        print(self.current['wifi']['currentAP']['ssid'])
+        print(self.current['wifi']['currentAP'])
 
 
     def save_config(self):
@@ -38,3 +36,14 @@ class ConfigManager:
         if self.get_wifi_enabled():
             wifi_text_state = "[on]"
         return wifi_text_state
+
+    def get_AP_by_name(self, AP_name):
+        for ap in self.current['wifi']['rememberedAPs']:
+            if ap['ssid'] == AP_name:
+                return ap
+        return{ "ssid" : "", "password" : "" } 
+
+    def get_current_AP(self):
+        current_AP_name = self.current['wifi']['currentAP']
+        ap = self.get_AP_by_name(self.current['wifi']['currentAP'])
+        return ap

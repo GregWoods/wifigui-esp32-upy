@@ -46,8 +46,9 @@ def connect_wifi():
     global wlan, connecting, connected, config
     global current_screen
 
-    ssid = config.current['wifi']['currentAP']['ssid']
-    password = config.current['wifi']['currentAP']['password']
+    currentAP = config.get_current_AP()
+    ssid = currentAP['ssid']
+    password = currentAP['password']
     wifi_enabled = config.current['wifi']['enabled']
 
     wlan.active(wifi_enabled) 
@@ -129,7 +130,7 @@ def main_menu(animate = True, preserve_selected_idx = False):
     ui.screen.clear()
     #ui.screen.add_row("test ", change_access_point)
     ui.screen.add_row("WiFi " + config.get_wifi_state_text(), toggle_wifi)
-    ui.screen.add_row(config.current['wifi']['currentAP']['ssid'], change_access_point)
+    ui.screen.add_row(config.current['wifi']['currentAP'], change_access_point)
     ui.screen.add_row("Row 3", press3)
     ui.screen.add_row("Row 4", press4)
     ui.screen.add_row("Row 5", press5)
@@ -146,6 +147,9 @@ def forget_current_AP():
 
 def select_ap(ap_idx):
     print("selected AP:", ap_idx)
+    #save the AP
+    #connect to it
+
 
 def choose_another_network():
     global current_screen, ui
@@ -163,6 +167,7 @@ def choose_another_network():
     ui.screen.clear()
     for idx, ap in enumerate(access_points):
         ui.screen.add_row(ap[0], lambda tmp=idx:select_ap(tmp))
+    ui.screen.add_row("Back", change_access_point)
     ui.screen.show()
 
 
@@ -170,7 +175,7 @@ def change_access_point():
     global current_screen, config, ui
     current_screen = "change_access_point"
     ui.screen.clear()
-    ui.screen.add_row("Forget " + config.current['wifi']['currentAP']['ssid'], forget_current_AP)
+    ui.screen.add_row("Forget " + config.current['wifi']['currentAP'], forget_current_AP)
     ui.screen.add_row("Choose another", choose_another_network)
     ui.screen.add_row("Back", main_menu)
     ui.screen.show()
