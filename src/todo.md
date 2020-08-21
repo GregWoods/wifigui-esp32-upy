@@ -1,10 +1,15 @@
 /*
-On Surface Pro...;lots of blue squiggles in VS Code
-Is something missing in microPy-cli setup?
-Compare to GregDesktop
-
 
 NEXT: work on keyboard navigation UI
+
+see main while loop for button press handling specific to keyboard UI
+ 
+
+
+
+
+
+
 
 
 ONCE Refamiliar with Code:
