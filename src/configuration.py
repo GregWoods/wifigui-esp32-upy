@@ -13,6 +13,7 @@ class ConfigManager:
         f = uio.open('settings.json', 'r')
         self.current = json.loads(f.read())
         f.close()
+        print("Config Loaded")
         print(self.current['wifi']['currentAP'])
 
 
@@ -38,20 +39,20 @@ class ConfigManager:
             wifi_text_state = "[on]"
         return wifi_text_state
 
-    def get_saved_AP_by_name(self, AP_name):  
+    def get_saved_AP_by_name(self, AP_name):
         # AP_name parameter may be a bytearray, if it has come from wlan.scan()
         APs = list(filter(lambda ap: ap['ssid'] == AP_name, self.current['wifi']['savedAPs']))
         if len(APs) > 1:
             print("That is odd! More than one Access Point with the name '", AP_name, "'")
         if len(APs) == 0:
             print("No saved AP called '", AP_name, "'")
-            return { "ssid" : "", "password" : "" } 
+            return {"ssid" : "", "password" : ""}
         print("Matching AP: ", APs[0])
         return APs[0]
-        
+
     def get_current_AP(self):
         current_AP_name = self.current['wifi']['currentAP']
-        ap = self.get_saved_AP_by_name(self.current['wifi']['currentAP'])
+        ap = self.get_saved_AP_by_name(current_AP_name)
         return ap
 
     def is_AP_saved(self, AP_name):
@@ -59,5 +60,6 @@ class ConfigManager:
         return len(APs) == 1
 
     def set_current_AP(self, value):
-        self.current['wifi']['currentAP'] = value   
-        self.save_config()    
+        self.current['wifi']['currentAP'] = value
+        self.save_config()
+

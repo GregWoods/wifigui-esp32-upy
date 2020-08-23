@@ -1,6 +1,6 @@
 {
     "wifi" : {
-        "enabled" : true,
+        "enabled" : false,
         "currentAP" : "ndhome",
         "savedAPs" : [
             {
