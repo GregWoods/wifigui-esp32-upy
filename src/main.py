@@ -40,9 +40,6 @@ def connecting_screen():
     global current_screen, screen_type
     current_screen = "connecting_screen"
     screen_type = "menu"
-
-    current_screen = "main"
-    screen_type = "menu"
     screen.clear()
     screen.add_row("Connecting...")
     screen.add_row("Cancel", cancel_connecting)
@@ -134,10 +131,12 @@ def show_keyboard():
 
 def main_menu(animate=True, preserve_selected_idx=False):
     global current_screen, screen_type, config
+
+    # if we just came from main_menu, keep the currently selected menu row
     preserve_selected_idx = (current_screen == "main_menu")
 
     current_screen = "main_menu"
-    screen_type = "main"
+    screen_type = "menu"
 
     screen.clear()
     #screen.add_row("test ", change_access_point)
@@ -246,7 +245,6 @@ while True:
 
     while screen_type == "menu":
         #interupts constantly set the state of the last press
-
         button.process_button()
 
         if button.is_clicked():
@@ -262,8 +260,9 @@ while True:
             connect_wifi()
 
         utime.sleep_ms(10)
+        
 
-
+    """
     while screen_type == "keyboard":
         #interupts constantly set the state of the last press
         button.process_button()
@@ -281,3 +280,4 @@ while True:
             connect_wifi()
 
         utime.sleep_ms(10)
+    """

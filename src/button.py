@@ -22,11 +22,10 @@ class Button:
     _is_long_press = False
     _keyup_reset = True
 
-    def update_button_state(self):
+    def update_button_state(self, _timer):
         #check button state, and store it in button_history, restrict it to the
         #  last 8 reads
         self._button_history = ((self._button_history << 1) | self._btn.value()) & 0xFF
-
 
     def __init__(self, btn, timer, keypress_period):
         self._btn = btn

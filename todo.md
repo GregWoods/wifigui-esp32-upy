@@ -1,4 +1,12 @@
 /*
+#
+
+Random syntax error messages... try uploading without PyMakr
+see if errors still occur
+How do you develop without Pymakr???
+Ampy?
+
+
 
 NEXT: work on keyboard navigation UI
 
