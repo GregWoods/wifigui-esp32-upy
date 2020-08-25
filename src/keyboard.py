@@ -6,7 +6,7 @@ class KbType:
 class Keyboard:
 
     oled = ""
-    selected_row_idx = 4
+    selected_row_idx = 0
     selected_key_idx = 0
 
     def __init__(self, oled):
@@ -79,3 +79,21 @@ class Keyboard:
                 self.oled.fill_rect(horiz_posn, vert_position - 1, key_width, ROW_HEIGHT, bg_color)
                 self.oled.text(key_text, horiz_posn, vert_position, text_color)
         self.oled.show()
+
+#
+    def next_key(self):
+        print("next_key")
+        kb_variant = self.kb[0]  #std keyboard for now
+        self.selected_key_idx += 1
+        keys_in_row = len(kb_variant[self.selected_row_idx])
+        if self.selected_key_idx >= keys_in_row:
+            self.selected_key_idx = 0
+            self.selected_row_idx += 1
+            number_rows = len(kb_variant)
+            if self.selected_row_idx >= number_rows:
+                self.selected_row_idx = 0
+        self.show()
+
+    
+    def select_current_key(self):
+        print("select_current_key")

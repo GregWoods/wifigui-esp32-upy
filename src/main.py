@@ -1,11 +1,13 @@
 import machine
 from machine import Pin, I2C, Timer
+from micropython import kbd_intr
 import network
 import utime
 import ssd1306
 
 from button import Button
-from screen import Screen
+from menu_ui import Menu
+
 # from configuration import ConfigManager
 import configuration
 from keyboard import Keyboard
@@ -40,10 +42,10 @@ def connecting_screen():
     global current_screen, screen_type
     current_screen = "connecting_screen"
     screen_type = "menu"
-    screen.clear()
-    screen.add_row("Connecting...")
-    screen.add_row("Cancel", cancel_connecting)
-    screen.show()
+    menu.clear()
+    menu.add_row("Connecting...")
+    menu.add_row("Cancel", cancel_connecting)
+    menu.show()
 
 
 def connect_wifi():
@@ -122,10 +124,9 @@ def toggle_wifi():
 
 
 def show_keyboard():
-    global oled
+    global kbd_intr
     global screen_type
     screen_type = "keyboard"
-    kb = Keyboard(oled)
     kb.show()
 
 
@@ -138,17 +139,17 @@ def main_menu(animate=True, preserve_selected_idx=False):
     current_screen = "main_menu"
     screen_type = "menu"
 
-    screen.clear()
-    #screen.add_row("test ", change_access_point)
-    screen.add_row("WiFi " + config.get_wifi_state_text(), toggle_wifi)
-    screen.add_row(config.current['wifi']['currentAP'], change_access_point)
-    screen.add_row("Keyboard", show_keyboard)
+    menu.clear()
+    #menu.add_row("test ", change_access_point)
+    menu.add_row("WiFi " + config.get_wifi_state_text(), toggle_wifi)
+    menu.add_row(config.current['wifi']['currentAP'], change_access_point)
+    menu.add_row("Keyboard", show_keyboard)
 
-    screen.add_row("Test 1 ", toggle_wifi)
+    menu.add_row("Test 1 ", toggle_wifi)
 
     #if connected:
-    #    screen.add_row(wlan.ifconfig()[0], menu_type = UiRowType.bottom)
-    screen.show(animate, preserve_selected_idx)
+    #    menu.add_row(wlan.ifconfig()[0], menu_type = UiRowType.bottom)
+    menu.show(animate, preserve_selected_idx)
 
 def forget_current_AP():
     global current_screen
@@ -190,29 +191,29 @@ def choose_another_network():
     screen_type = "menu"
     print(current_screen)
 
-    #temporary "scanning" screen, so the user knows their button Press worked
-    screen.clear()
-    screen.add_row("Scanning...")
-    screen.show()
+    #temporary "scanning" menu, so the user knows their button Press worked
+    menu.clear()
+    menu.add_row("Scanning...")
+    menu.show()
 
     access_points = wlan.scan() #blocks for a couple of seconds
     print(access_points)
-    screen.clear()
+    menu.clear()
     for idx, ap in enumerate(access_points):
-        screen.add_row(ap[0], lambda tmp=idx: select_ap(tmp))
-    screen.add_row("Back", change_access_point)
-    screen.show()
+        menu.add_row(ap[0], lambda tmp=idx: select_ap(tmp))
+    menu.add_row("Back", change_access_point)
+    menu.show()
 
 
 def change_access_point():
     global current_screen, screen_type, config
     current_screen = "change_access_point"
     screen_type = "menu"
-    screen.clear()
-    screen.add_row("Forget " + config.current['wifi']['currentAP'], forget_current_AP)
-    screen.add_row("Choose another", choose_another_network)
-    screen.add_row("Back", main_menu)
-    screen.show()
+    menu.clear()
+    menu.add_row("Forget " + config.current['wifi']['currentAP'], forget_current_AP)
+    menu.add_row("Choose another", choose_another_network)
+    menu.add_row("Back", main_menu)
+    menu.show()
 
 
 
@@ -235,7 +236,9 @@ MAX_ROWS = 5
 ROW_HEIGHT = int(screen_height / MAX_ROWS)
 
 button = Button(btn, timer, KEYPRESS_PERIOD)
-screen = Screen(oled, ROW_HEIGHT)
+menu = Menu(oled, ROW_HEIGHT)
+kb = Keyboard(oled)
+
 
 main_menu(animate=False)
 #connect_wifi() #disable to speed up testing
@@ -248,11 +251,11 @@ while True:
         button.process_button()
 
         if button.is_clicked():
-            screen.navigate_menu()
+            menu.navigate_menu()
             print("Click")
         if button.is_pressed():
             print("Press")
-            screen.call_current_row_method()
+            menu.call_current_row_method()
         if button.is_long_pressed():
             print("Very long press")
 
@@ -262,17 +265,15 @@ while True:
         utime.sleep_ms(10)
         
 
-    """
+    
     while screen_type == "keyboard":
         #interupts constantly set the state of the last press
         button.process_button()
 
         if button.is_clicked():
-            #screen.kb_next_key()
-            print("Key Skip")
+            kb.next_key()
         if button.is_pressed():
-            print("Key Press")
-            #screen.ckb_select_current_key()
+            kb.select_current_key()
         if button.is_long_pressed():
             print("Very long press")
 
@@ -280,4 +281,4 @@ while True:
             connect_wifi()
 
         utime.sleep_ms(10)
-    """
+    
