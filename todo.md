@@ -1,20 +1,7 @@
-/*
-#
-
-Random syntax error messages... try uploading without PyMakr
-see if errors still occur
-How do you develop without Pymakr???
-Ampy?
-
-
-
-NEXT: work on keyboard navigation UI
-
-see main while loop for button press handling specific to keyboard UI
- 
-
-
-
+NEXT:
+1. Integrate keyboard [ OK ] with the screen which called the kb
+2. Implement keyrepeat
+3. Add flashing cursor to keyboard
 
 
 

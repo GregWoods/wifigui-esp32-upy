@@ -245,8 +245,9 @@ main_menu(animate=False)
 
 
 while True:
-
-    while screen_type == "menu":
+    # some OO magic may be useful here
+    
+    if screen_type == "menu":
         #interupts constantly set the state of the last press
         button.process_button()
 
@@ -258,15 +259,9 @@ while True:
             menu.call_current_row_method()
         if button.is_long_pressed():
             print("Very long press")
-
-        if connecting and not connected:
-            connect_wifi()
-
-        utime.sleep_ms(10)
-        
-
     
-    while screen_type == "keyboard":
+
+    elif screen_type == "keyboard":
         #interupts constantly set the state of the last press
         button.process_button()
 
@@ -277,8 +272,9 @@ while True:
         if button.is_long_pressed():
             print("Very long press")
 
-        if connecting and not connected:
-            connect_wifi()
 
-        utime.sleep_ms(10)
+    if connecting and not connected:
+        connect_wifi()
+
+    utime.sleep_ms(10)
     
