@@ -22,10 +22,13 @@ class Button:
     _is_long_press = False
     _keyup_reset = True
 
+
+    # The interrupt handler
     def update_button_state(self, _timer):
         #check button state, and store it in button_history, restrict it to the
         #  last 8 reads
         self._button_history = ((self._button_history << 1) | self._btn.value()) & 0xFF
+
 
     def __init__(self, btn, timer, keypress_period):
         self._btn = btn
@@ -34,7 +37,7 @@ class Button:
 
 
     #--------------------------------------------------------------------------
-    #These are the ones we care about in the UI
+    #These are state checks we care about in the UI
     #  after reading the value, we reset to false. We assume that if its been read, it's been handled
 
     # They are used in conjunction with process_button()
@@ -61,16 +64,18 @@ class Button:
             return False
 
     #--------------------------------------------------------------------------
+    # Used internally by process_button to debounce the button
 
     def _key_down_event(self):
         # detects the start of a button press
         #   we mask out 3 bits in the middle which we don't care about (they could be bouncy)
-        #   then compare to a off/on transition
+        #   then compare to an off/on transition
         pressed = False
         if (self._button_history & 0b11000111) == 0b00000111:
             pressed = True
             self._button_history = 0b11111111
         return pressed
+
 
     def _key_up_event(self):
         released = False
@@ -79,11 +84,14 @@ class Button:
             self._button_history = 0b00000000
         return released
 
+
     def _key_is_down(self):
         return self._button_history == 0b11111111
 
+
     def _key_is_up(self):
         return self._button_history == 0b00000000
+
 
     #--------------------------------------------------------------------------
     def process_button(self):
@@ -91,6 +99,7 @@ class Button:
         #  keeps most of the work out of the interrupt handler
 
         if self._key_down_event():
+            print("key_down_event")
             self._start_pressed_millis = utime.ticks_ms()
             self._is_click = False
             self._is_press = False
@@ -98,22 +107,24 @@ class Button:
             self._keyup_reset = True
 
         if self._key_up_event():
+            print("key_up_event")
             self._is_click = False
             self._is_press = False
             self._is_long_press = False
 
             press_duration = utime.ticks_diff(utime.ticks_ms(), self._start_pressed_millis)
-
-            if press_duration < 700:
+            print(press_duration)
+            if press_duration < 200:
                 self._is_click = True
-
-            if press_duration > 7000:
-                self._is_long_press = True
-
-        if self._key_is_down():
-            press_duration = utime.ticks_diff(utime.ticks_ms(), self._start_pressed_millis)
-            #we need a key_up event between each Press
-            if press_duration > 700 and self._keyup_reset:
+            elif press_duration < 1000:
                 self._is_press = True
-                self._keyup_reset = False
+            #elif press_duration < 7000:
+            #    self._is_long_press = True
+
+        #if self._key_is_down():
+        #    press_duration = utime.ticks_diff(utime.ticks_ms(), self._start_pressed_millis)
+        #    #we need a key_up event between each Press
+        #    if press_duration > 700 and self._keyup_reset:
+        #        self._is_press = True
+        #        self._keyup_reset = False
 

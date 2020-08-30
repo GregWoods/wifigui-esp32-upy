@@ -110,6 +110,7 @@ class Keyboard:
         elif key == "[ Ok ]":
             print("Finished text is: " + self.text)
             self.ok_callback(self.text)
+            return
         else:
             print("UNKNOWN key:'" + key + "'")
 

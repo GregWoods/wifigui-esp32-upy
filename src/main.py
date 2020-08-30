@@ -132,10 +132,12 @@ def show_keyboard():
 
 def kb_callback(text):
     print("kb_callback: " + text)
+
     main_menu()
     
 
 def main_menu(animate=True, preserve_selected_idx=False):
+    print("main_menu")
     global current_screen, screen_type, config
 
     # if we just came from main_menu, keep the currently selected menu row
@@ -251,11 +253,11 @@ main_menu(animate=False)
 
 while True:
     # some OO magic may be useful here
-    
+
+    button.process_button()
+
     if screen_type == "menu":
         #interupts constantly set the state of the last press
-        button.process_button()
-
         if button.is_clicked():
             menu.navigate_menu()
             print("Click")
@@ -264,12 +266,10 @@ while True:
             menu.call_current_row_method()
         if button.is_long_pressed():
             print("Very long press")
-    
+
 
     elif screen_type == "keyboard":
         #interupts constantly set the state of the last press
-        button.process_button()
-
         if button.is_clicked():
             kb.next_key()
         if button.is_pressed():
