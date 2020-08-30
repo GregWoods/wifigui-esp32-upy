@@ -6,6 +6,7 @@ class KbType:
 class Keyboard:
 
     oled = ""
+    ok_callback = ""
     
     kb_variant = KbType.LOWER
     selected_row_idx = 0
@@ -13,9 +14,10 @@ class Keyboard:
     text = ""
 
 
-    def __init__(self, oled):
+    def __init__(self, oled, callback):
         print("keyboard init")
         self.oled = oled
+        self.ok_callback = callback
 
     #TODO: custom graphical characters for things like Shift, Return, Backspace
     # LATER: consider plain array instead of lists. Look into memoryview
@@ -92,7 +94,7 @@ class Keyboard:
                 self.selected_row_idx = 0
         self.show()
 
-    
+
     def select_current_key(self):
         kb = self.keyboards[self.kb_variant]  #std keyboard for now
         key = kb[self.selected_row_idx][self.selected_key_idx]
@@ -105,10 +107,11 @@ class Keyboard:
                 self.kb_variant = 0
         elif key == "[Del]":
             self.text = self.text[:-1]
-        elif key == "[ OK ]":
+        elif key == "[ Ok ]":
             print("Finished text is: " + self.text)
+            self.ok_callback(self.text)
         else:
-            print("UNKNOWN key")
+            print("UNKNOWN key:'" + key + "'")
 
         self.show()
         print(self.text)

@@ -130,6 +130,11 @@ def show_keyboard():
     kb.show()
 
 
+def kb_callback(text):
+    print("kb_callback: " + text)
+    main_menu()
+    
+
 def main_menu(animate=True, preserve_selected_idx=False):
     global current_screen, screen_type, config
 
@@ -178,7 +183,7 @@ def input_wifi_password():
     current_screen = "wifi_password"
     screen_type = "keyboard"
     print("input_wifi_password")
-    kb = Keyboard(oled)
+    kb = Keyboard(oled, kb_callback)
     kb.show()
 
 access_points = []
@@ -237,7 +242,7 @@ ROW_HEIGHT = int(screen_height / MAX_ROWS)
 
 button = Button(btn, timer, KEYPRESS_PERIOD)
 menu = Menu(oled, ROW_HEIGHT)
-kb = Keyboard(oled)
+kb = Keyboard(oled, kb_callback)
 
 
 main_menu(animate=False)
