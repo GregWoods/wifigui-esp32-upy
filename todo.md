@@ -1,25 +1,21 @@
 DONE
+
 1. DONE: Integrate keyboard [ OK ] with the screen which called the kb
+1. (Pre-req to keyrepeat, and bug fix for the above) Reimplement long press so it only occurs on keyup. I'll need to define the min-max keydown time. Try 200-700ms, so keyrepeat is over 700ms.
 
 NEXT:
-bug: one long press event can run into another. e.g. [ Ok ] on keyboard navigates back to main screen, keep holding key, and it goes back into keyboard. Each new long press event needs a keyup event to reset it. This will link to keyrepeat which will require a change to long press so that it only activates on keyup
 
-1. (Pre-req to keyrepeat, and bug fix for the above) Reimplement long press so it only occurs on keyup. I'll need to define the min-max keydown time. Try 200-700ms, so keyrepeat is over 700ms.
-2. Implement keyrepeat
-3. Add flashing cursor to keyboard
-4. Investigate: WebUSB in MicroPython. Can a web server be run over USB? That would be ideal for initial config (instead of the onscreen keyboard)
+1. Implement keyrepeat
+1. Add flashing cursor to keyboard
+1. Investigate: WebUSB in MicroPython. Can a web server be run over USB? That would be ideal for initial config (instead of the onscreen keyboard)
 
 
 
 
 
-ONCE Refamiliar with Code:
-
-split UI so that the Menu is separate from the Screen, and possibly Navigation is something else
 All menus could be stored in one object
-
 shown as json, but implemented with python objects
-*/
+
 
 ```json
 "Navigation" : {
