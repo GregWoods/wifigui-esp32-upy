@@ -6,6 +6,7 @@ DONE
 NEXT:
 
 1. Implement keyrepeat
+    is_long_pressed is not working
 1. Add flashing cursor to keyboard
 1. Investigate: WebUSB in MicroPython. Can a web server be run over USB? That would be ideal for initial config (instead of the onscreen keyboard)
 

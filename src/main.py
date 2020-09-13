@@ -238,11 +238,11 @@ oled = ssd1306.SSD1306_I2C(screen_width, screen_height, i2c, screen_i2c_address)
 btn = Pin(GPIO25, Pin.IN, Pin.PULL_DOWN)    #Temp value because we can't declare a type. The real setup is in init
 # sample keypresses every 4ms (with 8bits of history = 32ms to detect and debounce a valid press and release event)
 timer = Timer(0)
-KEYPRESS_PERIOD = 4
+
 MAX_ROWS = 5
 ROW_HEIGHT = int(screen_height / MAX_ROWS)
 
-button = Button(btn, timer, KEYPRESS_PERIOD)
+button = Button(btn, timer)
 menu = Menu(oled, ROW_HEIGHT)
 kb = Keyboard(oled, kb_callback)
 
@@ -272,10 +272,11 @@ while True:
         #interupts constantly set the state of the last press
         if button.is_clicked():
             kb.next_key()
-        if button.is_pressed():
+        if button.is_pressed():     #rename to long_clicked
             kb.select_current_key()
         if button.is_long_pressed():
             print("Very long press")
+            kb.start_keyrepeat()
 
 
     if connecting and not connected:
