@@ -252,7 +252,7 @@ main_menu(animate=False)
 
 
 while True:
-    # some OO magic may be useful here
+    # some OO magic would be useful here
 
     button.process_button()
 
@@ -274,9 +274,9 @@ while True:
             kb.next_key()
         if button.is_pressed():     #rename to long_clicked
             kb.select_current_key()
-        if button.is_long_pressed():
-            print("Very long press")
-            kb.start_keyrepeat()
+        #if button.is_long_pressed():
+        #    print("Very long press")
+        #    kb.start_keyrepeat()
 
 
     if connecting and not connected:
