@@ -4,6 +4,8 @@
     // List of extensions which should be recommended for users of this workspace.
     "recommendations": [
         "ms-python.python", // micropy-cli: required for vscode micropython integrations
-        "VisualStudioExptTeam.vscodeintellicode" // micropy-cli: optional for advanced intellisense
+        "VisualStudioExptTeam.vscodeintellicode", // micropy-cli: optional for advanced intellisense
+        "ms-python.vscode-pylance",
+        "pycom.pymakr"
     ]
 }
