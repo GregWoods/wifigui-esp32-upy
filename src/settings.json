@@ -4,8 +4,8 @@
         "currentAP" : "ndhome",
         "savedAPs" : [
             {
-                "ssid" : "ndhome",
-                "password" : "thislittlePiggy"
+                "ssid" : "YOURSSID",
+                "password" : "YOUR_WIFI_PASSWORD"
             }            
         ]
     }
